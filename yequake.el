@@ -3,7 +3,7 @@
 ;; Copyright (C) 2018 Adam Porter
 
 ;; Author: Adam Porter <adam@alphapapa.net>
-;; URL: http://github.com/alphapapa/yequake.el
+;; URL: http://github.com/alphapapa/yequake
 ;; Version: 0.1-pre
 ;; Package-Requires: ((emacs "25.2") (dash "2.14.1"))
 ;; Keywords: convenience, window-system, frames
@@ -94,7 +94,7 @@
 
 (defgroup yequake nil
   "Drop-down Emacs frames, like Yakuake."
-  :link '(url-link "http://github.com/alphapapa/yequake.el")
+  :link '(url-link "http://github.com/alphapapa/yequake")
   :group 'convenience)
 
 (defcustom yequake-frames nil
