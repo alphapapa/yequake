@@ -1,0 +1,149 @@
+#+TITLE: yequake
+#+PROPERTY: LOGGING nil
+
+#+BEGIN_HTML
+<a href=https://alphapapa.github.io/dont-tread-on-emacs/><img src="images/dont-tread-on-emacs-150.png" align="right"></a>
+#+END_HTML
+
+# Note: This readme works with the org-make-toc <https://github.com/alphapapa/org-make-toc> package, which automatically updates the table of contents.
+
+# [[https://melpa.org/#/package-name][file:https://melpa.org/packages/yequake-badge.svg]] [[https://stable.melpa.org/#/package-name][file:https://stable.melpa.org/packages/yequake-badge.svg]]
+
+ This package provides configurable, drop-down Emacs frames, similar to drop-down terminal windows programs, like Yakuake.  Each frame can be customized to display certain buffers in a certain way, at the desired height, width, and opacity.  The idea is to call the =yequake-toggle= command from outside Emacs, using =emacsclient=, by binding a shell command to a global keyboard shortcut in the desktop environment.  Then, with a single keypress, the desired Emacs frame can be toggled on and off, showing the desired buffers.
+
+There are many options to configure ~yequake-frames~, but the customization UI makes it easy.  Try @@html:<kbd>@@M-x customize-option RET yequake-frames RET@@html:</kbd>@@
+
+* Screenshots
+:PROPERTIES:
+:TOC:      ignore
+:END:
+
+Note that the animation of the Emacs frame in this example is provided by the window manager.  Yequake simply displays the frame.
+
+[[images/animation.gif]]
+
+That animation was produced with this configuration:
+
+#+BEGIN_SRC elisp
+  (use-package yequake
+    :quelpa (yequake :fetcher github :repo "alphapapa/yequake")
+    :custom
+    (yequake-frames '(("Yequake & scratch" .
+                       ((name . "Yequake & scratch")
+                        (width . 0.75)
+                        (height . 0.5)
+                        (alpha . 0.95)
+                        (buffer-fns . ("~/src/emacs/yequake/yequake.el"
+                                       split-window-horizontally
+                                       "*scratch*"))
+                        (frame-parameters . ((undecorated . t))))))))
+#+END_SRC
+
+To activate it, call this command from a shell, e.g. by binding it to a global keyboard shortcut:
+
+#+BEGIN_SRC sh
+  emacsclient -n -e '(yequake-toggle "Yequake & scratch")'
+#+END_SRC
+
+* Contents                                                         :noexport:
+:PROPERTIES:
+:TOC:      this
+:END:
+  -  [[#installation][Installation]]
+  -  [[#usage][Usage]]
+  -  [[#changelog][Changelog]]
+  -  [[#credits][Credits]]
+
+* Installation
+:PROPERTIES:
+:TOC:      0
+:END:
+
+** Quelpa
+
+[[https://framagit.org/steckerhalter/quelpa-use-package][quelpa-use-package]] makes installation easy:
+
+#+BEGIN_SRC elisp
+  (use-package yequake
+    :quelpa (yequake :fetcher github :repo "alphapapa/yequake")
+    :custom
+    (yequake-frames '(("Yequake & scratch" .
+                       ((name . "Yequake & scratch")
+                        (width . 0.75)
+                        (height . 0.5)
+                        (alpha . 0.95)
+                        (buffer-fns . ("~/src/emacs/yequake/yequake.el"
+                                       split-window-horizontally
+                                       "*scratch*"))
+                        (frame-parameters . ((undecorated . t))))))))
+#+END_SRC
+
+** MELPA
+
+Yequake isn't on MELPA yet.
+
+# If you installed from MELPA, you're done.  Just run one of the commands below.
+
+** Manual
+
+Put =yequake.el= in your =load-path=, and this in your init file:
+
+#+BEGIN_SRC elisp
+  (require 'yequake)
+#+END_SRC
+
+* Usage
+:PROPERTIES:
+:TOC:      0
+:END:
+
++  Configure =yequake-frames=, e.g. with @@html:<kbd>@@M-x customize-option RET yequake-frames RET@@html:</kbd>@@.
++  Call ~yequake-toggle~:
+     -  From inside Emacs, it can be called as an interactive command with @@html:<kbd>@@M-x yequake-toggle RET@@html:</kbd>@@, and will prompt for a Yequake frame.
+     -  From outside Emacs, call =emacsclient= and eval the command with the name of a Yequake frame, like:
+
+#+BEGIN_SRC sh
+  emacsclient -n -e '(yequake-toggle "FRAME-NAME")'
+#+END_SRC
+
+        You'll probably want to bind that to a global keyboard shortcut in your desktop environment.
++  Call ~yequake-toggle~ again to hide the frame.
+
+** Tips
+
++ You can customize settings in the =yequake= group.
+
+* Changelog
+:PROPERTIES:
+:TOC:      0
+:END:
+
+** 0.1-pre
+
+Initial pre-release.
+
+* Credits
+
+This package was inspired by Benjamin Slade's [[https://gitlab.com/emacsomancer/equake][equake]] package, and by good ol' Yakuake.
+
+* Development
+:PROPERTIES:
+:TOC:      ignore
+:END:
+
+Bug reports, feature requests, suggestions — /oh my/!
+
+* License
+:PROPERTIES:
+:TOC:      ignore
+:END:
+
+GPLv3
+
+# Local Variables:
+# eval: (require 'org-make-toc)
+# before-save-hook: org-make-toc
+# org-export-with-properties: ()
+# org-export-with-title: t
+# End:
+
