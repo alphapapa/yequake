@@ -134,17 +134,26 @@ See Info node `(elisp)Frame Parameters'."
                   (const frame-parameters)
                   (alist :options (((const :tag "Opacity" alpha) float))))))))
 
+;;;; Variables
+
+(defvar yequake-focused nil
+  ;; This seems to be the only way to find out whether an Emacs frame has input focus in the window
+  ;; system.  See
+  ;; <https://emacs.stackexchange.com/questions/24597/determine-if-any-frame-has-input-focus> and
+  ;; <https://lists.gnu.org/archive/html/help-gnu-emacs/2015-11/msg00160.html>.
+  "Tracks whether Emacs has focus.")
 
 ;;;; Functions
 
 ;;;;; Commands
 
 ;;;###autoload
-(defun yequake-toggle (frame-name)
+(defun yequake-toggle (name)
   "Toggle the Yequake frame named FRAME-NAME."
   (interactive (list (completing-read "Frame: " yequake-frames)))
-  (when-let* ((frame (a-get yequake-frames frame-name)))
-    (yequake--toggle-frame frame)))
+  (if-let* ((frame (a-get yequake-frames name)))
+      (yequake--toggle-frame frame)
+    (user-error "No Yequake frame named: %s" name)))
 
 ;;;;; Support
 
@@ -166,11 +175,14 @@ See Info node `(elisp)Frame Parameters'."
             (buffer (display-buffer-same-window ret nil))))))))
 
 (defun yequake--toggle-frame (frame)
-  "If FRAME is visible, delete it; otherwise, display it anew."
+  "If FRAME exists but is invisible, raise it; if visible, delete it; otherwise, display it anew."
   (if-let* ((name (a-get frame 'name))
             (visible-frame (a-get (make-frame-names-alist) name)))
       ;; Frame is visible: hide it.
-      (delete-frame visible-frame)
+      (if (and yequake-focused (equal visible-frame (selected-frame)))
+          (delete-frame visible-frame)
+        (select-frame-set-input-focus visible-frame)
+        (setq yequake-focused t))
     ;; Show frame
     (-let* (((&alist '_x '_y 'width 'height 'buffer-fns 'alpha 'frame-parameters) frame)
             ((_monitor-x monitor-y monitor-width monitor-height) (mapcar #'floor (alist-get 'geometry (frame-monitor-attributes))))
@@ -192,7 +204,14 @@ See Info node `(elisp)Frame Parameters'."
       (delete-other-windows)
       (yequake--show-buffers buffer-fns)
       (select-frame-set-input-focus new-frame)
+      (setq yequake-focused t)
+      (add-hook 'focus-out-hook #'yequake--focus-out)
       new-frame)))
+
+(defun yequake--focus-out ()
+  "Set `yequake-focused' to nil.
+To be added to `focus-out-hook'."
+  (setq yequake-focused nil))
 
 ;;;; Footer
 
