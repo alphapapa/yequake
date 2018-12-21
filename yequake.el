@@ -139,15 +139,6 @@ See Info node `(elisp)Frame Parameters'."
   ;; <https://lists.gnu.org/archive/html/help-gnu-emacs/2015-11/msg00160.html>.
   "Tracks whether Emacs has focus.")
 
-;;;; Macros
-
-(defmacro yequake--alist (&rest args)
-  "Collect alternating keys and vals in ARGS into an alist."
-  ;; I would just use `a-list', but this reduces dependencies, and happens at expansion time rather
-  ;; than runtime.  I wish Emacs had this built-in.
-  `(list ,@(cl-loop for (key val) on args by #'cddr
-                    collect `(cons ,key ,val))))
-
 ;;;; Functions
 
 ;;;;; Commands
@@ -198,12 +189,12 @@ See Info node `(elisp)Frame Parameters'."
                             (integer height)
                             (float (floor (* monitor-height height)))))
             (frame-x (floor (/ (- monitor-width frame-width) 2)))
-            (new-frame (make-frame (append (yequake--alist 'name name
-                                                           'alpha alpha
-                                                           'left frame-x
-                                                           'top monitor-y
-                                                           'width (cons 'text-pixels frame-width)
-                                                           'height (cons 'text-pixels frame-height))
+            (new-frame (make-frame (append (list (cons 'name name)
+                                                 (cons 'alpha alpha)
+                                                 (cons 'left frame-x)
+                                                 (cons 'top monitor-y)
+                                                 (cons 'width (cons 'text-pixels frame-width))
+                                                 (cons 'height (cons 'text-pixels frame-height)))
                                            frame-parameters))))
       (select-frame new-frame)
       (delete-other-windows)
