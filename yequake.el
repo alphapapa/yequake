@@ -5,7 +5,7 @@
 ;; Author: Adam Porter <adam@alphapapa.net>
 ;; URL: http://github.com/alphapapa/yequake.el
 ;; Version: 0.1-pre
-;; Package-Requires: ((emacs "25.2") (a "0.1.0"))
+;; Package-Requires: ((emacs "25.2"))
 ;; Keywords: convenience, window-system, frames
 
 ;; This file is not part of GNU Emacs.
@@ -74,10 +74,6 @@
 
 ;;; Code:
 
-;;;; Requirements
-
-(require 'a)
-
 ;;;; Customization
 
 (defgroup yequake nil
@@ -143,6 +139,15 @@ See Info node `(elisp)Frame Parameters'."
   ;; <https://lists.gnu.org/archive/html/help-gnu-emacs/2015-11/msg00160.html>.
   "Tracks whether Emacs has focus.")
 
+;;;; Macros
+
+(defmacro yequake--alist (&rest args)
+  "Collect alternating keys and vals in ARGS into an alist."
+  ;; I would just use `a-list', but this reduces dependencies, and happens at expansion time rather
+  ;; than runtime.  I wish Emacs had this built-in.
+  `(list ,@(cl-loop for (key val) on args by #'cddr
+                    collect `(cons ,key ,val))))
+
 ;;;; Functions
 
 ;;;;; Commands
@@ -151,7 +156,7 @@ See Info node `(elisp)Frame Parameters'."
 (defun yequake-toggle (name)
   "Toggle the Yequake frame named NAME."
   (interactive (list (completing-read "Frame: " yequake-frames)))
-  (if-let* ((frame (a-get yequake-frames name)))
+  (if-let* ((frame (alist-get name yequake-frames nil nil #'string=)))
       (yequake--toggle-frame frame)
     (user-error "No Yequake frame named: %s" name)))
 
@@ -176,8 +181,8 @@ See Info node `(elisp)Frame Parameters'."
 
 (defun yequake--toggle-frame (frame)
   "If FRAME exists but is invisible, raise it; if visible, delete it; otherwise, display it anew."
-  (if-let* ((name (a-get frame 'name))
-            (visible-frame (a-get (make-frame-names-alist) name)))
+  (if-let* ((name (alist-get 'name frame))
+            (visible-frame (alist-get name (make-frame-names-alist) nil nil #'string=)))
       ;; Frame is visible: hide it.
       (if (and yequake-focused (equal visible-frame (selected-frame)))
           (delete-frame visible-frame)
@@ -193,12 +198,12 @@ See Info node `(elisp)Frame Parameters'."
                             (integer height)
                             (float (floor (* monitor-height height)))))
             (frame-x (floor (/ (- monitor-width frame-width) 2)))
-            (new-frame (make-frame (append (a-list 'name name
-                                                   'alpha alpha
-                                                   'left frame-x
-                                                   'top monitor-y
-                                                   'width (cons 'text-pixels frame-width)
-                                                   'height (cons 'text-pixels frame-height))
+            (new-frame (make-frame (append (yequake--alist 'name name
+                                                           'alpha alpha
+                                                           'left frame-x
+                                                           'top monitor-y
+                                                           'width (cons 'text-pixels frame-width)
+                                                           'height (cons 'text-pixels frame-height))
                                            frame-parameters))))
       (select-frame new-frame)
       (delete-other-windows)
