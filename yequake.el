@@ -149,7 +149,7 @@ See Info node `(elisp)Frame Parameters'."
 
 ;;;###autoload
 (defun yequake-toggle (name)
-  "Toggle the Yequake frame named FRAME-NAME."
+  "Toggle the Yequake frame named NAME."
   (interactive (list (completing-read "Frame: " yequake-frames)))
   (if-let* ((frame (a-get yequake-frames name)))
       (yequake--toggle-frame frame)
