@@ -153,33 +153,17 @@ See Info node `(elisp)Frame Parameters'."
 
 ;;;;; Support
 
-(defun yequake--show-buffers (buffer-fns)
-  "Show buffers returned by each function in BUFFER-FNS."
-  (cl-flet ((act (it) (cl-typecase it
-                        (string (or (get-buffer it)
-                                    (find-buffer-visiting it)
-                                    (find-file-noselect it)))
-                        (function (funcall it)))))
-    (let ((split-width-threshold 0)
-          (split-height-threshold 0))
-      ;; Switch to first buffer, pop to the rest.
-      (switch-to-buffer (act (car buffer-fns)))
-      (dolist (fn (cdr buffer-fns))
-        (when-let* ((ret (act fn)))
-          (cl-typecase ret
-            (window (select-window ret))
-            (buffer (display-buffer-same-window ret nil))))))))
-
 (defun yequake--toggle-frame (frame)
   "If FRAME exists but is unfocused, raise and focus it; if focused, delete it; otherwise, display it anew."
   (if-let* ((name (alist-get 'name frame))
             (visible-frame (alist-get name (make-frame-names-alist) nil nil #'string=)))
-      ;; Frame is visible: hide it.
       (if (and yequake-focused (equal visible-frame (selected-frame)))
+          ;; Frame is visible and focused: delete it.
           (delete-frame visible-frame)
+        ;; Frame is visible but not focused: raise and focus it.
         (select-frame-set-input-focus visible-frame)
         (setq yequake-focused t))
-    ;; Show frame
+    ;; Frame doesn't exist: make it.
     (-let* (((&alist '_x '_y 'width 'height 'buffer-fns 'alpha 'frame-parameters) frame)
             ((_monitor-x monitor-y monitor-width monitor-height) (mapcar #'floor (alist-get 'geometry (frame-monitor-attributes))))
             (frame-width (cl-typecase width
@@ -203,6 +187,23 @@ See Info node `(elisp)Frame Parameters'."
       (setq yequake-focused t)
       (add-hook 'focus-out-hook #'yequake--focus-out)
       new-frame)))
+
+(defun yequake--show-buffers (buffer-fns)
+  "Show buffers returned by each function in BUFFER-FNS."
+  (cl-flet ((act (it) (cl-typecase it
+                        (string (or (get-buffer it)
+                                    (find-buffer-visiting it)
+                                    (find-file-noselect it)))
+                        (function (funcall it)))))
+    (let ((split-width-threshold 0)
+          (split-height-threshold 0))
+      ;; Switch to first buffer, pop to the rest.
+      (switch-to-buffer (act (car buffer-fns)))
+      (dolist (fn (cdr buffer-fns))
+        (when-let* ((ret (act fn)))
+          (cl-typecase ret
+            (window (select-window ret))
+            (buffer (display-buffer-same-window ret nil))))))))
 
 (defun yequake--focus-out ()
   "Set `yequake-focused' to nil.
