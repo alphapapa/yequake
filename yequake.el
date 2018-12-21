@@ -5,7 +5,7 @@
 ;; Author: Adam Porter <adam@alphapapa.net>
 ;; URL: http://github.com/alphapapa/yequake.el
 ;; Version: 0.1-pre
-;; Package-Requires: ((emacs "25.2"))
+;; Package-Requires: ((emacs "25.2") (dash "2.14.1"))
 ;; Keywords: convenience, window-system, frames
 
 ;; This file is not part of GNU Emacs.
@@ -73,6 +73,12 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Code:
+
+;;;; Requirements
+
+(require 'cl-lib)
+
+(require 'dash)
 
 ;;;; Compatibility
 
