@@ -89,16 +89,24 @@
   "List of predefined framesets for Yakuake to display.
 Each value should be an alist setting at least these keys:
 
-`name': Frame name
+`name': Frame name.
 
-`buffer-fns': List of functions and strings used to display buffers.  Each entry should be either a function, which returns a buffer to display or splits the window and does not return a buffer, or a string, which either names an existing buffer or is the path to a file to display.
+`buffer-fns': List of functions and strings used to display
+buffers.  Each entry should be either a function, which returns a
+buffer to display or splits the window and does not return a
+buffer, or a string, which either names an existing buffer or is
+the path to a file to display.
 
-`width': An integer pixel width, or a float fraction of the monitor width.
-`height': An integer pixel height, or a float fraction of the monitor height.
+`width': An integer pixel width, or a float fraction of the
+monitor width.
 
-These keys may optionally be set:
+`height': An integer pixel height, or a float fraction of the
+monitor height.
 
-`alpha': Float opacity for the new frame."
+`frame-parameters': Alist of parameters passed to `make-frame',
+e.g. `alpha' to set the frame opacity.
+
+See Info node `(elisp)Frame Parameters'."
   ;; NOTE: The value-type could also be done like this, but it allows other key values, which looks
   ;; a little confusing in the customization UI.  This doesn't allow other values, but it does show
   ;; both the tag and const name, which is redundant and a bit confusing.
@@ -118,10 +126,13 @@ These keys may optionally be set:
             (cons :tag "Name" (const name) string)
             (cons :tag "Width" (const width) number)
             (cons :tag "Height" (const height) number)
-            (cons :tag "Alpha" (const alpha) float)
             (cons :tag "Buffer Functions" (const buffer-fns)
                   (repeat (choice (string :tag "Buffer or file name")
-                                  (function :tag "Function that returns a buffer or splits the window"))))))))
+                                  (function :tag "Function that returns a buffer or splits the window"))))
+            (cons :tag "Frame parameters" :format "%t: %h"
+                  :doc "See info(elisp) Frame Parameters."
+                  (const frame-parameters)
+                  (alist :options (((const :tag "Opacity" alpha) float))))))))
 
 (defcustom yequake-resize-delay 0.025
   "Time in seconds to wait between positioning a frame and resizing it.
@@ -167,7 +178,7 @@ height, and vice versa."
       ;; Frame is visible: hide it.
       (delete-frame visible-frame)
     ;; Show frame
-    (-let* (((&alist '_x '_y 'width 'height 'buffer-fns 'alpha) frame)
+    (-let* (((&alist '_x '_y 'width 'height 'buffer-fns 'alpha 'frame-parameters) frame)
             ((_monitor-x monitor-y monitor-width monitor-height) (mapcar #'floor (alist-get 'geometry (frame-monitor-attributes))))
             (frame-width (cl-typecase width
                            (integer width)
@@ -176,9 +187,11 @@ height, and vice versa."
                             (integer height)
                             (float (floor (* monitor-height height)))))
             (frame-x (floor (/ (- monitor-width frame-width) 2)))
-            (new-frame (make-frame (a-list 'name name
-                                           'alpha alpha))))
-      (set-frame-position new-frame frame-x monitor-y)
+            (new-frame (make-frame (append (a-list 'name name
+                                                   'alpha alpha
+                                                   'left frame-x
+                                                   'top monitor-y)
+                                           frame-parameters))))
       ;; I wish this `sleep-for' weren't necessary, but I can't find a way around it, otherwise
       ;; setting the frame width undoes the setting of the frame height, or vice versa.
       (sleep-for yequake-resize-delay)
