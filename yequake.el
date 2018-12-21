@@ -180,7 +180,7 @@ See Info node `(elisp)Frame Parameters'."
             (buffer (display-buffer-same-window ret nil))))))))
 
 (defun yequake--toggle-frame (frame)
-  "If FRAME exists but is invisible, raise it; if visible, delete it; otherwise, display it anew."
+  "If FRAME exists but is unfocused, raise and focus it; if focused, delete it; otherwise, display it anew."
   (if-let* ((name (alist-get 'name frame))
             (visible-frame (alist-get name (make-frame-names-alist) nil nil #'string=)))
       ;; Frame is visible: hide it.
