@@ -74,6 +74,15 @@
 
 ;;; Code:
 
+;;;; Compatibility
+
+;; For Emacs <26
+
+(unless (fboundp 'if-let*)
+  (defalias 'if-let* 'if-let))
+(unless (fboundp 'when-let*)
+  (defalias 'when-let* 'when-let))
+
 ;;;; Customization
 
 (defgroup yequake nil
