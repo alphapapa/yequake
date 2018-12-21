@@ -77,6 +77,7 @@
 ;;;; Requirements
 
 (require 'cl-lib)
+(require 'subr-x)
 
 (require 'dash)
 
