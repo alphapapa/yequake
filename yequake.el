@@ -1,4 +1,4 @@
-;;; yequake.el --- Drop-down Emacs frames, like Yakuake  -*- lexical-binding: t; -*-
+;;; yequake.el --- Drop-down frames, like Yakuake  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2018 Adam Porter
 
