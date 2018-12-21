@@ -81,8 +81,8 @@
 ;;;; Customization
 
 (defgroup yequake nil
-  "Settings for `yequake'."
-  :link '(url-link "http://example.com/yequake.el")
+  "Drop-down Emacs frames, like Yakuake."
+  :link '(url-link "http://github.com/alphapapa/yequake.el")
   :group 'convenience)
 
 (defcustom yequake-frames nil
