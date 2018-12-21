@@ -22,21 +22,19 @@ Note that the animation of the Emacs frame in this example is provided by the wi
 
 [[images/animation.gif]]
 
-That animation was produced with this configuration:
+That animation was produced with this ~yequake-frames~ configuration:
 
 #+BEGIN_SRC elisp
-  (use-package yequake
-    :quelpa (yequake :fetcher github :repo "alphapapa/yequake")
-    :custom
-    (yequake-frames '(("Yequake & scratch" .
-                       ((name . "Yequake & scratch")
-                        (width . 0.75)
-                        (height . 0.5)
-                        (alpha . 0.95)
-                        (buffer-fns . ("~/src/emacs/yequake/yequake.el"
-                                       split-window-horizontally
-                                       "*scratch*"))
-                        (frame-parameters . ((undecorated . t))))))))
+  (setq yequake-frames
+        '(("Yequake & scratch" .
+           ((name . "Yequake & scratch")
+            (width . 0.75)
+            (height . 0.5)
+            (alpha . 0.95)
+            (buffer-fns . ("~/src/emacs/yequake/yequake.el"
+                           split-window-horizontally
+                           "*scratch*"))
+            (frame-parameters . ((undecorated . t)))))))
 #+END_SRC
 
 To activate it, call this command from a shell, e.g. by binding it to a global keyboard shortcut:
@@ -65,17 +63,7 @@ To activate it, call this command from a shell, e.g. by binding it to a global k
 
 #+BEGIN_SRC elisp
   (use-package yequake
-    :quelpa (yequake :fetcher github :repo "alphapapa/yequake")
-    :custom
-    (yequake-frames '(("Yequake & scratch" .
-                       ((name . "Yequake & scratch")
-                        (width . 0.75)
-                        (height . 0.5)
-                        (alpha . 0.95)
-                        (buffer-fns . ("~/src/emacs/yequake/yequake.el"
-                                       split-window-horizontally
-                                       "*scratch*"))
-                        (frame-parameters . ((undecorated . t))))))))
+    :quelpa (yequake :fetcher github :repo "alphapapa/yequake"))
 #+END_SRC
 
 ** MELPA
