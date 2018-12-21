@@ -97,6 +97,7 @@ Put =yequake.el= in your =load-path=, and this in your init file:
 :TOC:      0
 :END:
 
++  Start an Emacs daemon (e.g. with =emacs --daemon=, or @@html:<kbd>@@M-x server-start RET@@html:</kbd>@@).
 +  Configure =yequake-frames=, e.g. with @@html:<kbd>@@M-x customize-option RET yequake-frames RET@@html:</kbd>@@.
 +  Call ~yequake-toggle~:
      -  From inside Emacs, it can be called as an interactive command with @@html:<kbd>@@M-x yequake-toggle RET@@html:</kbd>@@, and will prompt for a Yequake frame.
