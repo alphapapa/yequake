@@ -124,7 +124,8 @@ Initial pre-release.
 
 * Credits
 
-This package was inspired by Benjamin Slade's [[https://gitlab.com/emacsomancer/equake][equake]] package, and by good ol' Yakuake.
++  This package was inspired by Benjamin Slade's [[https://gitlab.com/emacsomancer/equake][equake]] package, and by good ol' Yakuake.
++  The animation was created with [[https://github.com/colinkeenan/silentcast][Silentcast]] and GIMP.
 
 * Development
 :PROPERTIES:
