@@ -134,12 +134,6 @@ See Info node `(elisp)Frame Parameters'."
                   (const frame-parameters)
                   (alist :options (((const :tag "Opacity" alpha) float))))))))
 
-(defcustom yequake-resize-delay 0.025
-  "Time in seconds to wait between positioning a frame and resizing it.
-I have no idea why this is necessary, but on my system it is.
-Without it, setting the frame width undoes the just-changed
-height, and vice versa."
-  :type 'float)
 
 ;;;; Functions
 
@@ -190,13 +184,10 @@ height, and vice versa."
             (new-frame (make-frame (append (a-list 'name name
                                                    'alpha alpha
                                                    'left frame-x
-                                                   'top monitor-y)
+                                                   'top monitor-y
+                                                   'width (cons 'text-pixels frame-width)
+                                                   'height (cons 'text-pixels frame-height))
                                            frame-parameters))))
-      ;; I wish this `sleep-for' weren't necessary, but I can't find a way around it, otherwise
-      ;; setting the frame width undoes the setting of the frame height, or vice versa.
-      (sleep-for yequake-resize-delay)
-      (set-frame-height new-frame frame-height nil 'pixel)
-      (set-frame-width new-frame frame-width nil 'pixel)
       (select-frame new-frame)
       (delete-other-windows)
       (yequake--show-buffers buffer-fns)
