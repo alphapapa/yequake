@@ -115,6 +115,14 @@ monitor width.
 `height': An integer pixel height, or a float fraction of the
 monitor height.
 
+`left': An integer pixel distance from the workspace left edge,
+or a floating point ratio of the workspace width.  See Info
+node `(elisp)Position Parameters'.
+
+`top': An integer pixel distance from the workspace top edge, or
+a floating point ratio of the workspace height.  See Info
+node `(elisp)Position Parameters'.
+
 `frame-parameters': Alist of parameters passed to `make-frame',
 e.g. `alpha' to set the frame opacity.
 
@@ -138,6 +146,8 @@ See Info node `(elisp)Frame Parameters'."
             (cons :tag "Name" (const name) string)
             (cons :tag "Width" (const width) number)
             (cons :tag "Height" (const height) number)
+            (cons :tag "Left" (const left) number)
+            (cons :tag "Top" (const top) number)
             (cons :tag "Buffer Functions" (const buffer-fns)
                   (repeat (choice (string :tag "Buffer or file name")
                                   (function :tag "Function that returns a buffer or splits the window"))))
@@ -180,7 +190,7 @@ See Info node `(elisp)Frame Parameters'."
         (select-frame-set-input-focus visible-frame)
         (setq yequake-focused t))
     ;; Frame doesn't exist: make it.
-    (-let* (((&alist '_x '_y 'width 'height 'buffer-fns 'alpha 'frame-parameters) frame)
+    (-let* (((&alist '_x '_y 'width 'height 'left 'top 'buffer-fns 'alpha 'frame-parameters) frame)
             ((_monitor-x monitor-y monitor-width monitor-height) (mapcar #'floor (alist-get 'geometry (frame-monitor-attributes))))
             (frame-width (cl-typecase width
                            (integer width)
@@ -188,14 +198,19 @@ See Info node `(elisp)Frame Parameters'."
             (frame-height (cl-typecase height
                             (integer height)
                             (float (floor (* monitor-height height)))))
-            (frame-x (floor (/ (- monitor-width frame-width) 2)))
-            (new-frame (make-frame (append (list (cons 'name name)
+            (frame-x (or left
+                         (floor (/ (- monitor-width frame-width)
+                                   2))))
+            (frame-y (or top
+                         (floor (/ (- monitor-height frame-height)
+                                   2))))
+            (new-frame (make-frame (append frame-parameters
+                                           (list (cons 'name name)
                                                  (cons 'alpha alpha)
                                                  (cons 'left frame-x)
-                                                 (cons 'top monitor-y)
+                                                 (cons 'top frame-y)
                                                  (cons 'width (cons 'text-pixels frame-width))
-                                                 (cons 'height (cons 'text-pixels frame-height)))
-                                           frame-parameters))))
+                                                 (cons 'height (cons 'text-pixels frame-height)))))))
       (select-frame new-frame)
       (delete-other-windows)
       (yequake--show-buffers buffer-fns)
