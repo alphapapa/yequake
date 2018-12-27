@@ -102,6 +102,24 @@ Put =yequake.el= in your =load-path=, and this in your init file:
 
 + You can customize settings in the =yequake= group.
 + The ~yequake-retoggle~ command toggles the most recently toggled frame.
++ The ~yequake-org-capture~ function is suitable for use in a Yequake frame that calls ~org-capture~.  It calls ~org-capture~ with the same signature and sets ~org-capture-after-finalize-hook~ to close the Yequake frame after the capture is finalized.  (Note that if another Yequake frame is toggled before the capture is finalized, when the capture is finalized, the wrong Yequake frame will be toggled.)  For example, you could do this:
+
+#+BEGIN_SRC elisp
+  (setq yequake-frames
+        '(("org-capture"
+           (name . "org-capture")
+           (buffer-fns . (yequake-org-capture))
+           (width . 0.9)
+           (height . 0.8)
+           (alpha . 0.95)
+           (frame-parameters . ((undecorated . t)
+                                (skip-taskbar . t)
+                                (sticky . t))))))
+
+  (yequake-toggle "org-capture")
+#+END_SRC
+
+   *Note:* There seems to be a bug that prevents the =org-capture= window from being displayed automatically after the capture template is selected.
 
 * Changelog
 :PROPERTIES:

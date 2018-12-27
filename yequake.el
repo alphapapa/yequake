@@ -250,6 +250,21 @@ See Info node `(elisp)Frame Parameters'."
 To be added to `focus-out-hook'."
   (setq yequake-focused nil))
 
+(defun yequake-org-capture (&optional goto keys)
+  "Call `org-capture' in a Yequake frame.
+Adds a function to `org-capture-after-finalize-hook' that closes
+the recently toggled Yequake frame and removes itself from the
+hook.
+
+Note: if another Yequake frame is toggled before the capture is
+finalized, when the capture is finalized, the wrong Yequake frame
+will be toggled."
+  (let* ((remove-hook-fn (lambda ()
+                           (remove-hook 'org-capture-after-finalize-hook #'yequake-retoggle))))
+    (add-hook 'org-capture-after-finalize-hook remove-hook-fn)
+    (add-hook 'org-capture-after-finalize-hook #'yequake-retoggle)
+    (org-capture goto keys)))
+
 ;;;; Footer
 
 (provide 'yequake)
