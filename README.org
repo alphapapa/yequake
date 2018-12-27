@@ -101,6 +101,7 @@ Put =yequake.el= in your =load-path=, and this in your init file:
 ** Tips
 
 + You can customize settings in the =yequake= group.
++ The ~yequake-retoggle~ command toggles the most recently toggled frame.
 
 * Changelog
 :PROPERTIES:

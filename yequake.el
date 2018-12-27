@@ -165,6 +165,9 @@ See Info node `(elisp)Frame Parameters'."
   ;; <https://lists.gnu.org/archive/html/help-gnu-emacs/2015-11/msg00160.html>.
   "Tracks whether Emacs has focus.")
 
+(defvar yequake-recent-frame-name nil
+  "Name of most recently toggled frame.")
+
 ;;;; Functions
 
 ;;;;; Commands
@@ -174,8 +177,13 @@ See Info node `(elisp)Frame Parameters'."
   "Toggle the Yequake frame named NAME."
   (interactive (list (completing-read "Frame: " yequake-frames)))
   (if-let* ((frame (alist-get name yequake-frames nil nil #'string=)))
-      (yequake--toggle-frame frame)
+      (when (yequake--toggle-frame frame)
+        (setq yequake-recent-frame-name name))
     (user-error "No Yequake frame named: %s" name)))
+
+(defun yequake-retoggle ()
+  "Toggle most recently toggled frame."
+  (yequake-toggle yequake-recent-frame-name))
 
 ;;;;; Support
 
