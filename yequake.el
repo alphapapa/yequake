@@ -209,9 +209,7 @@ See Info node `(elisp)Frame Parameters'."
             (frame-x (or left
                          (floor (/ (- monitor-width frame-width)
                                    2))))
-            (frame-y (or top
-                         (floor (/ (- monitor-height frame-height)
-                                   2))))
+            (frame-y (or top 0))
             (new-frame (make-frame (append frame-parameters
                                            (list (cons 'name name)
                                                  (cons 'alpha alpha)
