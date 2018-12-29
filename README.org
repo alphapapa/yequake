@@ -7,7 +7,8 @@
 
 # Note: This readme works with the org-make-toc <https://github.com/alphapapa/org-make-toc> package, which automatically updates the table of contents.
 
-# [[https://melpa.org/#/package-name][file:https://melpa.org/packages/yequake-badge.svg]] [[https://stable.melpa.org/#/package-name][file:https://stable.melpa.org/packages/yequake-badge.svg]]
+[[https://melpa.org/#/yequake][file:https://melpa.org/packages/yequake-badge.svg]]
+# [[https://stable.melpa.org/#/package-name][file:https://stable.melpa.org/packages/yequake-badge.svg]]
 
  This package provides configurable, drop-down Emacs frames, similar to drop-down terminal windows programs, like Yakuake.  Each frame can be customized to display certain buffers in a certain way, at the desired height, width, and opacity.  The idea is to call the =yequake-toggle= command from outside Emacs, using =emacsclient=, by binding a shell command to a global keyboard shortcut in the desktop environment.  Then, with a single keypress, the desired Emacs frame can be toggled on and off, showing the desired buffers.
 
@@ -68,9 +69,7 @@ To activate it, call this command from a shell, e.g. by binding it to a global k
 
 ** MELPA
 
-Yequake isn't on MELPA yet.
-
-# If you installed from MELPA, you're done.  Just run one of the commands below.
+If you installed from MELPA, you're done!
 
 ** Manual
 
