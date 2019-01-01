@@ -101,8 +101,6 @@
   "List of predefined framesets for Yakuake to display.
 Each value should be an alist setting at least these keys:
 
-`name': Frame name.
-
 `buffer-fns': List of functions and strings used to display
 buffers.  Each entry should be either a function, which returns a
 buffer to display or splits the window and does not return a
@@ -131,8 +129,7 @@ See Info node `(elisp)Frame Parameters'."
   ;; a little confusing in the customization UI.  This doesn't allow other values, but it does show
   ;; both the tag and const name, which is redundant and a bit confusing.
 
-  ;; (alist :options (((const :tag "Name" name) string)
-  ;;                  ((const :tag "Width" width) number)
+  ;; (alist :options (((const :tag "Width" width) number)
   ;;                  ((const :tag "Height" height) number)
   ;;                  ((const :tag "Alpha" alpha) number)
   ;;                  ((const :tag "Buffer functions" buffer-fns)
@@ -143,7 +140,6 @@ See Info node `(elisp)Frame Parameters'."
           :value-type
           (repeat
            (choice
-            (cons :tag "Name" (const name) string)
             (cons :tag "Width" (const width) number)
             (cons :tag "Height" (const height) number)
             (cons :tag "Left" (const left) number)
@@ -177,8 +173,7 @@ See Info node `(elisp)Frame Parameters'."
   "Toggle the Yequake frame named NAME."
   (interactive (list (completing-read "Frame: " yequake-frames)))
   (if-let* ((frame (alist-get name yequake-frames nil nil #'string=)))
-      (when (yequake--toggle-frame frame)
-        (setq yequake-recent-frame-name name))
+      (yequake--toggle-frame name frame)
     (user-error "No Yequake frame named: %s" name)))
 
 (defun yequake-retoggle ()
@@ -187,10 +182,9 @@ See Info node `(elisp)Frame Parameters'."
 
 ;;;;; Support
 
-(defun yequake--toggle-frame (frame)
-  "If FRAME exists but is unfocused, raise and focus it; if focused, delete it; otherwise, display it anew."
-  (if-let* ((name (alist-get 'name frame))
-            (visible-frame (alist-get name (make-frame-names-alist) nil nil #'string=)))
+(defun yequake--toggle-frame (name frame)
+  "If frame named NAME exists but is unfocused, raise and focus it; if focused, delete it; otherwise, display FRAME anew."
+  (if-let* ((visible-frame (alist-get name (make-frame-names-alist) nil nil #'string=)))
       (if (and yequake-focused (equal visible-frame (selected-frame)))
           ;; Frame is visible and focused: delete it.
           (delete-frame visible-frame)

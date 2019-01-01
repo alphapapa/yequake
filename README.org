@@ -28,8 +28,7 @@ That animation was produced with this ~yequake-frames~ configuration:
 #+BEGIN_SRC elisp
   (setq yequake-frames
         '(("Yequake & scratch" .
-           ((name . "Yequake & scratch")
-            (width . 0.75)
+           ((width . 0.75)
             (height . 0.5)
             (alpha . 0.95)
             (buffer-fns . ("~/src/emacs/yequake/yequake.el"
@@ -106,7 +105,6 @@ Put =yequake.el= in your =load-path=, and this in your init file:
 #+BEGIN_SRC elisp
   (setq yequake-frames
         '(("org-capture"
-           (name . "org-capture")
            (buffer-fns . (yequake-org-capture))
            (width . 0.9)
            (height . 0.8)
