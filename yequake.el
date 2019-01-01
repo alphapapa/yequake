@@ -212,13 +212,18 @@ See Info node `(elisp)Frame Parameters'."
                                                  (cons 'width (cons 'text-pixels frame-width))
                                                  (cons 'height (cons 'text-pixels frame-height))
                                                  (cons 'user-position t))))))
-      (select-frame new-frame)
       (delete-other-windows)
-      (yequake--show-buffers buffer-fns)
+      (select-frame new-frame)
       (select-frame-set-input-focus new-frame)
-      (setq yequake-focused t)
       (add-hook 'focus-out-hook #'yequake--focus-out)
-      new-frame)))
+      (setq yequake-recent-frame-name name
+            yequake-focused t)
+      ;; Call show-buffers function after setting focus and variable.
+      ;; If show-buffers is aborted, the frame will be focused and
+      ;; recorded as such, so -retoggle can hide it again.  This is
+      ;; required for `yequake-org-capture'.
+      (when (yequake--show-buffers buffer-fns)
+        new-frame))))
 
 (defun yequake--show-buffers (buffer-fns)
   "Show buffers returned by each function in BUFFER-FNS."
@@ -255,7 +260,24 @@ will be toggled."
                            (remove-hook 'org-capture-after-finalize-hook #'yequake-retoggle))))
     (add-hook 'org-capture-after-finalize-hook remove-hook-fn)
     (add-hook 'org-capture-after-finalize-hook #'yequake-retoggle)
-    (org-capture goto keys)))
+    ;; MAYBE: Propose an `org-capture-switch-buffer-fn' variable that could be rebound here.
+
+    ;; NOTE: We override `org-switch-to-buffer-other-window' because
+    ;; it always uses `switch-to-buffer-other-window', and we want to
+    ;; display the template menu and capture buffer in the existing
+    ;; window rather than splitting the frame.
+    (cl-letf* (((symbol-function #'org-switch-to-buffer-other-window)
+                (symbol-function #'switch-to-buffer)))
+      (condition-case nil
+          (progn
+            (org-capture goto keys)
+            ;; Be sure to return the "CAPTURE-" buffer, which is the current
+            ;; buffer at this point.
+            (current-buffer))
+        ((error quit)
+         ;; Capture aborted: remove the hook and hide the capture frame.
+         (remove-hook 'org-capture-after-finalize-hook #'yequake-retoggle)
+         (yequake-retoggle))))))
 
 ;;;; Footer
 

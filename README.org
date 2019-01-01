@@ -116,8 +116,6 @@ Put =yequake.el= in your =load-path=, and this in your init file:
   (yequake-toggle "org-capture")
 #+END_SRC
 
-   *Note:* There seems to be a bug that prevents the =org-capture= window from being displayed automatically after the capture template is selected.
-
 * Changelog
 :PROPERTIES:
 :TOC:      0
