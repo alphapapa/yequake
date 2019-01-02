@@ -143,7 +143,7 @@ Initial pre-release.
 * Credits
 
 +  This package was inspired by Benjamin Slade's [[https://gitlab.com/emacsomancer/equake][equake]] package, and by good ol' Yakuake.
-+  The animation was created with [[https://github.com/colinkeenan/silentcast][Silentcast]] and GIMP.
++  The animations were created with [[https://github.com/alphapapa/bashcaster][Bashcaster]] and GIMP.
 
 * Development
 :PROPERTIES:
