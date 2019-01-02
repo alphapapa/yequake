@@ -100,21 +100,36 @@ Put =yequake.el= in your =load-path=, and this in your init file:
 
 + You can customize settings in the =yequake= group.
 + The ~yequake-retoggle~ command toggles the most recently toggled frame.
-+ The ~yequake-org-capture~ function is suitable for use in a Yequake frame that calls ~org-capture~.  It calls ~org-capture~ with the same signature and sets ~org-capture-after-finalize-hook~ to close the Yequake frame after the capture is finalized.  (Note that if another Yequake frame is toggled before the capture is finalized, when the capture is finalized, the wrong Yequake frame will be toggled.)  For example, you could do this:
+
+** Org Capture
+
+The ~yequake-org-capture~ function is suitable for use in a Yequake frame used for Org Capture.  It calls ~org-capture~ and sets ~org-capture-after-finalize-hook~ to close the Yequake frame after the capture is finalized or canceled.  (Note that if another Yequake frame is toggled before the capture is finalized, when the capture is finalized, the wrong Yequake frame will be toggled.)  For example, with this configuration:
 
 #+BEGIN_SRC elisp
-  (setq yequake-frames
-        '(("org-capture"
-           (buffer-fns . (yequake-org-capture))
-           (width . 0.9)
-           (height . 0.8)
-           (alpha . 0.95)
-           (frame-parameters . ((undecorated . t)
-                                (skip-taskbar . t)
-                                (sticky . t))))))
+  (use-package yequake
+    :quelpa (yequake :fetcher github :repo "alphapapa/yequake")
 
-  (yequake-toggle "org-capture")
+    :custom
+    (yequake-frames
+     '(("org-capture" 
+        (buffer-fns . (yequake-org-capture))
+        (width . 0.75)
+        (height . 0.5)
+        (alpha . 0.95)
+        (frame-parameters . ((undecorated . t)
+                             (skip-taskbar . t)
+                             (sticky . t)))))))
 #+END_SRC
+
+You could then run:
+
+#+BEGIN_SRC sh
+  emacsclient -n -e '(yequake-toggle "org-capture")'
+#+END_SRC
+
+And after the capture is finalized or canceled, the frame will be closed, like this:
+
+[[images/org-capture.gif]]
 
 * Changelog
 :PROPERTIES:
