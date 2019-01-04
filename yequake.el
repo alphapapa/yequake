@@ -164,9 +164,7 @@ See Info node `(elisp)Frame Parameters'."
 (defvar yequake-recent-frame-name nil
   "Name of most recently toggled frame.")
 
-;;;; Functions
-
-;;;;; Commands
+;;;; Commands
 
 ;;;###autoload
 (defun yequake-toggle (name)
@@ -182,7 +180,7 @@ See Info node `(elisp)Frame Parameters'."
   (interactive)
   (yequake-toggle yequake-recent-frame-name))
 
-;;;;; Support
+;;;; Functions
 
 (defun yequake--toggle-frame (name frame)
   "If frame named NAME exists but is unfocused, raise and focus it; if focused, delete it; otherwise, display FRAME anew."
