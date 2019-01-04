@@ -178,6 +178,8 @@ See Info node `(elisp)Frame Parameters'."
 
 (defun yequake-retoggle ()
   "Toggle most recently toggled frame."
+  ;; Not autoloaded, because `-toggle' must be used first.
+  (interactive)
   (yequake-toggle yequake-recent-frame-name))
 
 ;;;;; Support
