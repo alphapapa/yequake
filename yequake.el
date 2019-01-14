@@ -227,6 +227,7 @@ See Info node `(elisp)Frame Parameters'."
 
 (defun yequake--show-buffers (buffer-fns)
   "Show buffers returned by each function in BUFFER-FNS."
+  ;; FIXME: These can also be "window functions".  Should rename, and define obsolete alias for old variable.
   (cl-flet ((act (it) (cl-typecase it
                         (string (or (get-buffer it)
                                     (find-buffer-visiting it)
