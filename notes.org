@@ -1,0 +1,7 @@
+
+
+* Reference
+
+** [[https://github.com/tumashu/org-capture-pop-frame][GitHub - tumashu/org-capture-pop-frame: Pop a new frame, then run org-capture]]
+
+This is similar to =yequake-org-capture= in the way it handles the capture frame.  Some of its tricks might be useful.
