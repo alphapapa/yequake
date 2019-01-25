@@ -192,7 +192,7 @@ See Info node `(elisp)Frame Parameters'."
         (select-frame-set-input-focus visible-frame)
         (setq yequake-focused t))
     ;; Frame doesn't exist: make it.
-    (-let* (((&alist '_x '_y 'width 'height 'left 'top 'buffer-fns 'alpha 'frame-parameters) frame)
+    (-let* (((&alist 'width width 'height height 'left left 'top top 'buffer-fns buffer-fns 'alpha alpha 'frame-parameters frame-parameters) frame)
             ((monitor-x monitor-y monitor-width monitor-height) (mapcar #'floor (alist-get 'geometry (frame-monitor-attributes))))
             (frame-width (cl-typecase width
                            (integer width)
