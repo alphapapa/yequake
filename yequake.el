@@ -215,6 +215,7 @@ See Info node `(elisp)Frame Parameters'."
       (delete-other-windows)
       (select-frame new-frame)
       (select-frame-set-input-focus new-frame)
+      (add-hook 'focus-in-hook #'yequake--focus-in)
       (add-hook 'focus-out-hook #'yequake--focus-out)
       (setq yequake-recent-frame-name name
             yequake-focused t)
@@ -242,6 +243,11 @@ See Info node `(elisp)Frame Parameters'."
           (cl-typecase ret
             (window (select-window ret))
             (buffer (display-buffer-same-window ret nil))))))))
+
+(defun yequake--focus-in ()
+  "Set `yequake-focused' to t.
+To be added to `focus-out-hook'."
+  (setq yequake-focused t))
 
 (defun yequake--focus-out ()
   "Set `yequake-focused' to nil.
