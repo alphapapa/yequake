@@ -1,9 +1,9 @@
 ;;; yequake.el --- Drop-down frames, like Yakuake  -*- lexical-binding: t; -*-
-
 ;; Copyright (C) 2018 Adam Porter
 
 ;; Author: Adam Porter <adam@alphapapa.net>
 ;; URL: http://github.com/alphapapa/yequake
+;; Package-Version: 20191121.1726
 ;; Version: 0.1-pre
 ;; Package-Requires: ((emacs "25.2") (dash "2.14.1"))
 ;; Keywords: convenience, window-system, frames
@@ -80,6 +80,8 @@
 (require 'subr-x)
 
 (require 'dash)
+
+(require 'seq)
 
 ;;;; Compatibility
 
@@ -184,11 +186,14 @@ See Info node `(elisp)Frame Parameters'."
 
 (defun yequake--toggle-frame (name frame)
   "If frame named NAME exists but is unfocused, raise and focus it; if focused, delete it; otherwise, display FRAME anew."
-  (if-let* ((visible-frame (alist-get name (make-frame-names-alist) nil nil #'string=)))
+  (if-let* ((visible-frame (yequake--get-frame-by-name name)))
       (if (and yequake-focused (equal visible-frame (selected-frame)))
           ;; Frame is visible and focused: delete it.
-          (delete-frame visible-frame)
+          (progn
+            (make-frame-invisible visible-frame)
+            (setq yequake-focused nil))
         ;; Frame is visible but not focused: raise and focus it.
+        (make-frame-visible visible-frame)
         (select-frame-set-input-focus visible-frame)
         (setq yequake-focused t))
     ;; Frame doesn't exist: make it.
@@ -285,6 +290,12 @@ will be toggled."
          ;; Capture aborted: remove the hook and hide the capture frame.
          (remove-hook 'org-capture-after-finalize-hook #'yequake-retoggle)
          (yequake-retoggle))))))
+
+(defun yequake--get-frame-by-name (name)
+  (car (seq-filter (lambda (frame) (string= (yequake--get-frame-name frame) name)) (frame-list))))
+
+(defun yequake--get-frame-name (frame)
+  (cdr (assq 'name (frame-parameters frame))))
 
 ;;;; Footer
 
