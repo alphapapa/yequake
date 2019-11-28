@@ -292,7 +292,9 @@ will be toggled."
          (yequake-retoggle))))))
 
 (defun yequake--get-frame-by-name (name)
-  (car (seq-filter (lambda (frame) (string= (yequake--get-frame-name frame) name)) (frame-list))))
+  (car (seq-filter (lambda (frame)
+                     (string= (yequake--get-frame-name frame) name))
+                   (frame-list))))
 
 (defun yequake--get-frame-name (frame)
   (cdr (assq 'name (frame-parameters frame))))
