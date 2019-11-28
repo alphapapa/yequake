@@ -1,9 +1,9 @@
 ;;; yequake.el --- Drop-down frames, like Yakuake  -*- lexical-binding: t; -*-
+
 ;; Copyright (C) 2018 Adam Porter
 
 ;; Author: Adam Porter <adam@alphapapa.net>
 ;; URL: http://github.com/alphapapa/yequake
-;; Package-Version: 20191121.1726
 ;; Version: 0.1-pre
 ;; Package-Requires: ((emacs "25.2") (dash "2.14.1"))
 ;; Keywords: convenience, window-system, frames
