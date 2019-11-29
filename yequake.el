@@ -185,7 +185,7 @@ See Info node `(elisp)Frame Parameters'."
 ;;;; Functions
 
 (defun yequake--toggle-frame (name frame)
-  "If frame named NAME exists but is unfocused, raise and focus it; if focused, delete it; otherwise, display FRAME anew."
+  "If frame named NAME exists but is unfocused or invisible, make it visible, raise and focus it; if focused, make it invisible; otherwise, display FRAME anew."
   (if-let* ((visible-frame (yequake--get-frame-by-name name)))
       (if (and yequake-focused (equal visible-frame (selected-frame)))
           ;; Frame is visible and focused: delete it.
