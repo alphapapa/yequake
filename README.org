@@ -136,9 +136,9 @@ And after the capture is finalized or canceled, the frame will be closed, like t
 :TOC:      0
 :END:
 
-** 0.1-pre
+** 0.1
 
-Initial pre-release.
+First tagged release.
 
 * Credits
 
