@@ -164,12 +164,16 @@ See Info node `(elisp)Frame Parameters'."
 (defvar yequake-recent-frame-name nil
   "Name of most recently toggled frame.")
 
+(defvar yequake--macos-focused-app nil "App last invoking yequake (macOS only)")
+
 ;;;; Commands
 
 ;;;###autoload
 (defun yequake-toggle (name)
   "Toggle the Yequake frame named NAME."
   (interactive (list (completing-read "Frame: " yequake-frames)))
+  (when (eq system-type 'darwin)
+    (yequake--macos-save-focus))
   (if-let* ((frame (alist-get name yequake-frames nil nil #'string=)))
       (yequake--toggle-frame name frame)
     (user-error "No Yequake frame named: %s" name)))
@@ -178,9 +182,21 @@ See Info node `(elisp)Frame Parameters'."
   "Toggle most recently toggled frame."
   ;; Not autoloaded, because `-toggle' must be used first.
   (interactive)
+  (when (eq system-type 'darwin)
+    (yequake--macos-restore-focus))
   (yequake-toggle yequake-recent-frame-name))
 
 ;;;; Functions
+
+(defun yequake--macos-save-focus ()
+  "Remember the current macOS app which has focus."
+  (setq yequake--macos-focused-app (car (process-lines "osascript" "-e" "do shell script \"echo \" & quoted form of (path to frontmost application as text)"))))
+
+(defun yequake--macos-restore-focus ()
+  "Restore macOS app focus from previuos `yequake--macos-save-focus' invokation."
+  (assert yequake--macos-focused-app nil "Must invoke `yequake--macos-save-focus' first.")
+  (process-lines "osascript" "-e" (format "activate application \"%s\"" yequake--macos-focused-app))
+  (setq yequake--macos-focused-app nil))
 
 (defun yequake--toggle-frame (name frame)
   "If frame named NAME exists but is unfocused, raise and focus it; if focused, delete it; otherwise, display FRAME anew."
