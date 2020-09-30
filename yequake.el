@@ -263,6 +263,7 @@ hook.
 Note: if another Yequake frame is toggled before the capture is
 finalized, when the capture is finalized, the wrong Yequake frame
 will be toggled."
+  (require 'org)
   (let* ((remove-hook-fn (lambda ()
                            (remove-hook 'org-capture-after-finalize-hook #'yequake-retoggle))))
     (add-hook 'org-capture-after-finalize-hook remove-hook-fn)
