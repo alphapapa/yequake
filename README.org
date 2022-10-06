@@ -1,10 +1,6 @@
 #+TITLE: yequake
 #+PROPERTY: LOGGING nil
 
-#+BEGIN_HTML
-<a href=https://alphapapa.github.io/dont-tread-on-emacs/><img src="images/dont-tread-on-emacs-150.png" align="right"></a>
-#+END_HTML
-
 # Note: This readme works with the org-make-toc <https://github.com/alphapapa/org-make-toc> package, which automatically updates the table of contents.
 
 [[https://melpa.org/#/yequake][file:https://melpa.org/packages/yequake-badge.svg]]
