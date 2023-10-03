@@ -127,6 +127,35 @@ And after the capture is finalized or canceled, the frame will be closed, like t
 
 [[images/org-capture.gif]]
 
+* Known issues
+
+** Can't open a yequake-org-capture, or org-capture frame on a freshly started emacs daemon
+
+This problem seems to occur when the emacs daemon has no pre existing opened frame. When running from
+a terminal, you can see the error ~*ERROR*: Unkwown terminal type~.
+
+On GNU/Linux, you can fix this issue by setting additional frame-parameters: window-system and display.
+
+Here is the same org-capture snippet seen above, this time with the additional parameters:
+
+#+begin_src elisp
+        (use-package yequake
+          :quelpa (yequake :fetcher github :repo "alphapapa/yequake")
+
+          :custom
+          (yequake-frames
+           '(("org-capture" 
+              (buffer-fns . (yequake-org-capture))
+              (width . 0.75)
+              (height . 0.5)
+              (alpha . 0.95)
+              (frame-parameters . ((undecorated . t)
+                                   (skip-taskbar . t)
+                                   (sticky . t)
+  				 (window-system . x)
+  				 `(display . ,(or (getenv "DISPLAY") ":0"))))))))
+#+end_src
+
 * Changelog
 :PROPERTIES:
 :TOC:      0
